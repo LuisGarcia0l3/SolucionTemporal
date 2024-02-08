@@ -5,8 +5,13 @@ class RegisterModule {
         this.URL = './_content/_php/controllerAdmin.php';
         this.username = document.getElementById('username')
         this.btnbuscar = document.getElementById('btnbuscar');
-        this.UsuariosRegistrados();
         this.btnbuscar.addEventListener('click', () => this.existe(this.username.value)); // Modificación aquí
+    }
+
+
+
+    mostrarInformacionEnContenedor() {
+        this.UsuariosRegistrados();
     }
 
     existe(username) {
