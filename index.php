@@ -3,25 +3,31 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Buscar por username</title>
+    <title>Soluciones</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="./_content/_css/stylesadmin.css" rel="stylesheet">
+    <style>
+        .menu-option-active {
+            background-color: #4a5568; /* Cambia el color de fondo de la opción activa */
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
 
     <!-- Barra de menú -->
     <nav class="bg-gray-800 text-white">
-        <div class="container mx-auto flex justify-between items-center py-4">
+        <div class="container mx-auto flex justify-between px-8 items-center py-4">
 
             <!-- Logo con margen izquierdo en dispositivos móviles -->
-            <a href="#" class="text-xl font-bold md:ml-4">Mi Sitio</a>
+            <a href="#" class="text-xl font-bold md:ml-4">Soluciones</a>
 
             <!-- Menú de navegación -->
             <ul class="hidden md:flex space-x-4">
-                <li><a href="#" class="hover:text-gray-300">Registro</a></li>
-                <li><a href="#" class="hover:text-gray-300">Equipos</a></li>
-                <li><a href="#" class="hover:text-gray-300">Puntos</a></li>
+                <li><a href="#" id="opcionRegistro" class="hover:text-gray-300">Registro</a></li>
+                <li><a href="#" id="opcionEquipos" class="hover:text-gray-300">Equipos</a></li>
+                <li><a href="#" id="opcionPuntos" class="hover:text-gray-300">Puntos</a></li>
             </ul>
 
             <!-- Menú hamburguesa para dispositivos móviles -->
@@ -40,57 +46,42 @@
     <!-- Menú desplegable en dispositivos móviles -->
     <div id="mobile-menu" class="md:hidden bg-gray-800 text-white hidden">
         <ul class="py-2">
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">Registro</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">Equipos</a></li>
-            <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">Puntos</a></li>
+            <li><a href="#" id="mobile-opcionRegistro" class="hover:text-gray-300">Registro</a></li>
+            <li><a href="#" id="mobile-opcionEquipos" class="hover:text-gray-300">Equipos</a></li>
+            <li><a href="#" id="mobile-opcionPuntos" class="hover:text-gray-300">Puntos</a></li>
         </ul>
     </div>
 
-    <main>
+    <main id="app-container">
 
 
     </main>
+    <script src="./_content/_js/admin/HttpRequestService.js"></script>
+    <script src="./_content/_js/admin/RegisterModule.js"></script>
+    <script src="./_content/_js/admin/TeamsModule.js"></script>
 
+    <script src="./_content/_js/admin/app.js"></script>
 
-    <!-- Script para controlar el menú en dispositivos móviles -->
     <script>
-        document.getElementById('menu-toggle').addEventListener('click', function () {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        // JavaScript para marcar la opción seleccionada en el menú
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtener todas las opciones del menú
+            const menuOptions = document.querySelectorAll('.menu-option');
+
+            // Iterar sobre cada opción y agregar un event listener
+            menuOptions.forEach(function (option) {
+                option.addEventListener('click', function () {
+                    // Remover la clase 'menu-option-active' de todas las opciones
+                    menuOptions.forEach(function (opt) {
+                        opt.classList.remove('menu-option-active');
+                    });
+
+                    // Agregar la clase 'menu-option-active' a la opción seleccionada
+                    this.classList.add('menu-option-active');
+                });
+            });
         });
     </script>
-<script>
-    // Agregar eventos de clic a cada opción del menú
-    document.getElementById('opcionRegistro').addEventListener('click', function () {
-        handleMenuOptionClick('Registro');
-    });
-
-    document.getElementById('opcionEquipos').addEventListener('click', function () {
-        handleMenuOptionClick('Equipos');
-    });
-
-    document.getElementById('opcionPuntos').addEventListener('click', function () {
-        handleMenuOptionClick('Puntos');
-    });
-
-    // Función para manejar el clic en las opciones del menú
-    function handleMenuOptionClick(option) {
-        // Limpiar el contenedor antes de cargar nueva información
-        const contenedor = document.getElementById('contenedor-informacion');
-        contenedor.innerHTML = '';
-
-        // Instanciar la clase correspondiente
-        let module;
-        switch (option) {
-            case 'Registro':
-                module = new RegisterModule();
-                break;
-        }
-
-        // Llamar a la función que pinta la información en el contenedor
-        module.mostrarInformacionEnContenedor(contenedor);
-    }
-</script>
-
 </body>
 
 </html>

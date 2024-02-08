@@ -52,7 +52,7 @@ class ModelAdmin extends DBAbstractModel
 public function handlerUserRegistrados()
         {
         try {
-            $this->query = "SELECT *, (SELECT COUNT(*) FROM visita) AS contador_registros FROM visita;
+            $this->query = "SELECT *, DATE_FORMAT(fecha, '%H:%i:%s') AS hora, (SELECT COUNT(*) FROM visita) AS contador_registros FROM visita;
             ";
 
 
