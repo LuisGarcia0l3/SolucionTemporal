@@ -1,0 +1,7 @@
+
+
+const registerModule = new RegisterModule();
+
+
+
+
