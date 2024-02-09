@@ -4,8 +4,8 @@ class RegisterModule {
         this.httpRequestService = new HttpRequestService();
         this.container = document.getElementById('app-container');
         this.URL = './_content/_php/controllerAdmin.php';
-        this.username = document.getElementById('username');
         this.pantallaprincipal();
+        this.username = document.getElementById('username');
         this.btnbuscar = document.getElementById('btnbuscar');
     }
 
@@ -82,12 +82,15 @@ class RegisterModule {
         divPrincipal.appendChild(divModal);
         this.container.appendChild(h2Titulo);
         this.container.appendChild(divPrincipal);
-        this.btnbuscar.addEventListener('click', () => this.existe(inputSAP.value)); // Modificación aquí
+        this.btnbuscar.addEventListener('click', () => {
+            if(inputSAP.value.length > 0) {
+                this.existe(inputSAP.value);
+            } else {
+                alert('Por favor ingresa al menos un carácter en el campo SAP.');
+            }
+        });
     }
     
-
-
-
 
     existe(username) {
         let data_post = {
@@ -210,31 +213,35 @@ class RegisterModule {
             // Objeto para almacenar usuarios agrupados por fecha
             const usuariosPorFecha = {};
     
-            // Agrupar usuarios por fecha
+            // Agrupar usuarios por fecha y contar el número de registros por fecha
             usuarios.forEach(usuario => {
                 const fecha = usuario.fecha_sin_hora; // Suponiendo que "fecha_sin_hora" es la clave correcta
                 if (!usuariosPorFecha[fecha]) {
-                    usuariosPorFecha[fecha] = [];
+                    usuariosPorFecha[fecha] = {
+                        registros: 0,
+                        usuarios: []
+                    };
                 }
-                usuariosPorFecha[fecha].push(usuario);
+                usuariosPorFecha[fecha].registros++;
+                usuariosPorFecha[fecha].usuarios.push(usuario);
             });
     
             // Obtener las fechas únicas y ordenarlas de forma descendente
             const fechasUnicas = Object.keys(usuariosPorFecha).sort((a, b) => new Date(b) - new Date(a));
     
-            // Crear opciones del menú desplegable
+            // Crear opciones del menú desplegable con el número de registros por fecha
             const select = document.createElement('select');
             select.classList.add('block', 'w-full', 'p-2', 'border', 'border-gray-300', 'rounded-md', 'focus:outline-none', 'focus:border-indigo-500');
             select.addEventListener('change', () => {
                 const selectedDate = select.value;
-                const usuariosSeleccionados = usuariosPorFecha[selectedDate] || [];
+                const usuariosSeleccionados = usuariosPorFecha[selectedDate].usuarios || [];
                 this.actualizarTablaUsuarios(usuariosSeleccionados);
             });
     
             fechasUnicas.forEach(fecha => {
                 const option = document.createElement('option');
                 option.value = fecha;
-                option.textContent = fecha;
+                option.textContent = `${fecha} (${usuariosPorFecha[fecha].registros} registros)`;
                 select.appendChild(option);
             });
     
@@ -249,13 +256,14 @@ class RegisterModule {
     
             // Obtener la fecha más reciente y actualizar tabla con esa fecha por defecto
             const fechaMasReciente = fechasUnicas[0];
-            const usuariosFechaMasReciente = usuariosPorFecha[fechaMasReciente] || [];
+            const usuariosFechaMasReciente = usuariosPorFecha[fechaMasReciente].usuarios || [];
             this.actualizarTablaUsuarios(usuariosFechaMasReciente);
     
             // Establecer la fecha más reciente como la opción seleccionada por defecto en el select
             select.value = fechaMasReciente;
         }
     }
+    
     
     
     actualizarTablaUsuarios = usuarios => {
@@ -273,7 +281,7 @@ class RegisterModule {
         thead.classList.add('bg-gray-50');
     
         const trHead = document.createElement('tr');
-        ['Username', 'nombre' , 'hora'].forEach(texto => {
+        ['Username', 'nombre' ,'apaterno', 'hora'].forEach(texto => {
             const th = document.createElement('th');
             th.setAttribute('scope', 'col');
             th.classList.add('px-6', 'py-3', 'text-left', 'text-xs', 'font-medium', 'text-gray-500', 'uppercase', 'tracking-wider');
@@ -287,7 +295,7 @@ class RegisterModule {
         tbody.classList.add('bg-white', 'divide-y', 'divide-gray-200');
         usuarios.forEach(usuario => {
             const trBody = document.createElement('tr');
-            ['username','nombre', 'hora'].forEach(propiedad => {
+            ['username','nombre','apaterno', 'hora'].forEach(propiedad => {
                 const td = document.createElement('td');
                 td.classList.add('px-6', 'py-4', 'whitespace-nowrap');
                 td.textContent = usuario[propiedad];

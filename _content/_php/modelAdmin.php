@@ -53,6 +53,11 @@ public function handlerUserRegistrados()
         {
         try {
             $this->query = "SELECT *, DATE_FORMAT(fecha, '%H:%i:%s') AS hora, (SELECT COUNT(*) FROM visita) AS contador_registros FROM visita;
+            "; 
+            
+            $this->query = "SELECT v.id, u.username, u.nombre, u.apaterno, u.centro, u.equipo, v.fecha, v.fecha_sin_hora,DATE_FORMAT(fecha, '%H:%i:%s') AS hora
+            FROM visita v
+            JOIN usuarios u ON v.username = u.username
             ";
 
 
